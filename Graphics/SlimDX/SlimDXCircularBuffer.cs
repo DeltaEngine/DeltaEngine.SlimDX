@@ -1,4 +1,5 @@
-﻿using DeltaEngine.Core;
+﻿using System.Collections.Generic;
+using DeltaEngine.Core;
 using DeltaEngine.Graphics.Vertices;
 using SlimDX.Direct3D9;
 using DeviceD3D9 = SlimDX.Direct3D9.Device;
@@ -48,6 +49,15 @@ namespace DeltaEngine.Graphics.SlimDX
 		}
 
 		private IndexBufferD3D9 nativeIndexBuffer;
+		
+		protected override void DisposeNextFrame()
+		{
+			buffersToDisposeNextFrame.Add(nativeVertexBuffer);
+			if (UsesIndexBuffer)
+				buffersToDisposeNextFrame.Add(nativeIndexBuffer);
+		}
+
+		private readonly List<Resource> buffersToDisposeNextFrame = new List<Resource>();
 
 		protected override void AddDataNative<VertexType>(Chunk textureChunk, VertexType[] vertexData,
 			short[] indices, int numberOfVertices, int numberOfIndices)
@@ -88,6 +98,15 @@ namespace DeltaEngine.Graphics.SlimDX
 			nativeVertexBuffer.Dispose();
 			if (nativeIndexBuffer != null)
 				nativeIndexBuffer.Dispose();
+		}
+
+		public override void DisposeUnusedBuffersFromPreviousFrame()
+		{
+			if (buffersToDisposeNextFrame.Count <= 0)
+				return;
+			foreach (var buffer in buffersToDisposeNextFrame)
+				buffer.Dispose();
+			buffersToDisposeNextFrame.Clear();
 		}
 
 		protected override void DrawChunk(Chunk chunk)

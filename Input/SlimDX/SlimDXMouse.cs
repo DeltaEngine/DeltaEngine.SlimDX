@@ -34,9 +34,9 @@ namespace DeltaEngine.Input.SlimDX
 			protected set { }
 		}
 
-		public override void SetPosition(Point newPosition)
+		public override void SetPosition(Vector2D position)
 		{
-			positionTranslater.SetCursorPosition(newPosition);
+			positionTranslater.SetCursorPosition(position);
 		}
 
 		public override void Dispose()

@@ -6,7 +6,7 @@ using DeltaEngine.Entities;
 using DeltaEngine.Extensions;
 using DeltaEngine.Graphics.SlimDX;
 using DeltaEngine.Multimedia.VideoStreams;
-using DeltaEngine.Rendering.Sprites;
+using DeltaEngine.Rendering2D.Sprites;
 using DeltaEngine.ScreenSpaces;
 using SlimDX.Multimedia;
 using SlimDX.XAudio2;

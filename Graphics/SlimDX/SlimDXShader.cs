@@ -138,6 +138,16 @@ namespace DeltaEngine.Graphics.SlimDX
 			device.SetTexture(1, (texture as SlimDXImage).NativeTexture);			
 		}
 
+		public override void SetLightPosition(Vector3D vector)
+		{
+			// not implemented yet
+		}
+
+		public override void SetViewPosition(Vector3D vector)
+		{
+			// not implemented yet
+		}
+
 		public override void Bind()
 		{
 			device.SetTexture(0, null);

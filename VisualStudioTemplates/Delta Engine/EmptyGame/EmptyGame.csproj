@@ -40,13 +40,13 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="DeltaEngine">
-	  <HintPath>$(DeltaEnginePath)\DeltaEngine.dll</HintPath>
+	  <HintPath>$(DeltaEnginePath)\SlimDX\DeltaEngine.dll</HintPath>
     </Reference>
     <Reference Include="DeltaEngine.Platforms">
-	  <HintPath>$(DeltaEnginePath)\DeltaEngine.Platforms.dll</HintPath>
+	  <HintPath>$(DeltaEnginePath)\SlimDX\DeltaEngine.Platforms.dll</HintPath>
     </Reference>
     <Reference Include="DeltaEngine.WindowsSlimDX">
-	  <HintPath>$(DeltaEnginePath)\DeltaEngine.WindowsSlimDX.dll</HintPath>
+	  <HintPath>$(DeltaEnginePath)\SlimDX\DeltaEngine.WindowsSlimDX.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

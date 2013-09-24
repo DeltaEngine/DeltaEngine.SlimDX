@@ -60,15 +60,15 @@ namespace DeltaEngine.Input.SlimDX
 		}
 
 		private uint lastPacket;
-		private Point leftThumbStick;
-		private Point rightThumbStick;
+		private Vector2D leftThumbStick;
+		private Vector2D rightThumbStick;
 		private float leftTrigger;
 		private float rightTrigger;
 
-		private static Point Normalize(short rawX, short rawY, short threshold)
+		private static Vector2D Normalize(short rawX, short rawY, short threshold)
 		{
-			var value = new Point(rawX, rawY);
-			var magnitude = value.DistanceTo(Point.Zero);
+			var value = new Vector2D(rawX, rawY);
+			var magnitude = value.DistanceTo(Vector2D.Zero);
 			var direction = value / (magnitude == 0 ? 1 : magnitude);
 			var normalizedMagnitude = 0.0f;
 			if (magnitude - threshold > 0)
@@ -120,12 +120,12 @@ namespace DeltaEngine.Input.SlimDX
 
 		public override void Dispose() {}
 
-		public override Point GetLeftThumbStick()
+		public override Vector2D GetLeftThumbStick()
 		{
 			return leftThumbStick;
 		}
 
-		public override Point GetRightThumbStick()
+		public override Vector2D GetRightThumbStick()
 		{
 			return rightThumbStick;
 		}

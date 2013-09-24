@@ -7,9 +7,9 @@ namespace DeltaEngine.Graphics.SlimDX
 	/// </summary>
 	public class SlimDXScreenshotCapturer : ScreenshotCapturer
 	{
-		public SlimDXScreenshotCapturer(SlimDXDevice device)
+		public SlimDXScreenshotCapturer(Device device)
 		{
-			this.device = device;
+			this.device = (SlimDXDevice)device;
 		}
 
 		private readonly SlimDXDevice device;
