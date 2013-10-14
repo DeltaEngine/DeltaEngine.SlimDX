@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using DeltaEngine.Datatypes;
-using DeltaEngine.Entities;
 using DeltaEngine.Extensions;
 using SlimDX.XInput;
 using SlimDXState = SlimDX.XInput.State;
@@ -13,10 +11,7 @@ namespace DeltaEngine.Input.SlimDX
 	/// </summary>
 	public class SlimDXGamePad : GamePad
 	{
-		public SlimDXGamePad()
-			: this(GamePadNumber.Any) {}
-
-		public SlimDXGamePad(GamePadNumber number)
+		public SlimDXGamePad(GamePadNumber number = GamePadNumber.Any)
 			: base(number)
 		{
 			controller = new Controller(GetUserIndexFromNumber());
@@ -25,18 +20,27 @@ namespace DeltaEngine.Input.SlimDX
 				states[i] = State.Released;
 		}
 
-		private readonly Controller controller;
+		private Controller controller;
 		private readonly State[] states;
 
 		private UserIndex GetUserIndexFromNumber()
 		{
 			if (Number == GamePadNumber.Any)
-				return UserIndex.Any;
+				return GetAnyController();
 			if (Number == GamePadNumber.Two)
 				return UserIndex.Two;
 			if (Number == GamePadNumber.Three)
 				return UserIndex.Three;
 			return Number == GamePadNumber.Four ? UserIndex.Four : UserIndex.One;
+		}
+
+		private static UserIndex GetAnyController()
+		{
+			if (new Controller(UserIndex.Two).IsConnected)
+				return UserIndex.Two;
+			if (new Controller(UserIndex.Three).IsConnected)
+				return UserIndex.Three;
+			return new Controller(UserIndex.Three).IsConnected ? UserIndex.Four : UserIndex.One;
 		}
 
 		public override bool IsAvailable
@@ -45,8 +49,15 @@ namespace DeltaEngine.Input.SlimDX
 			protected set { }
 		}
 
+		protected override void UpdateGamePadStates()
+		{
+			var state = controller.GetState();
+			UpdateValuesFromState(ref state);
+		}
+
 		private void UpdateValuesFromState(ref SlimDXState state)
 		{
+			UpdateAllButtons(state.Gamepad.Buttons);
 			if (lastPacket == state.PacketNumber)
 				return;
 			lastPacket = state.PacketNumber;
@@ -56,7 +67,6 @@ namespace DeltaEngine.Input.SlimDX
 				Gamepad.GamepadRightThumbDeadZone);
 			leftTrigger = state.Gamepad.LeftTrigger / (float)byte.MaxValue;
 			rightTrigger = state.Gamepad.RightTrigger / (float)byte.MaxValue;
-			UpdateAllButtons(state.Gamepad.Buttons);
 		}
 
 		private uint lastPacket;
@@ -118,7 +128,10 @@ namespace DeltaEngine.Input.SlimDX
 			UpdateButton(buttons, GamepadButtonFlags.DPadRight, GamePadButton.Right);
 		}
 
-		public override void Dispose() {}
+		public override void Dispose()
+		{
+			controller = null;
+		}
 
 		public override Vector2D GetLeftThumbStick()
 		{
@@ -153,15 +166,6 @@ namespace DeltaEngine.Input.SlimDX
 				LeftMotorSpeed = motorSpeed,
 				RightMotorSpeed = motorSpeed
 			});
-		}
-
-		public override void Update(IEnumerable<Entity> entities)
-		{
-			//if (!IsAvailable)
-			//	return;
-			var state = controller.GetState();
-			UpdateValuesFromState(ref state);
-			base.Update(entities);
 		}
 	}
 }

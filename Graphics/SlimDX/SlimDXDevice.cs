@@ -118,10 +118,10 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		private void ClearScreenAndBeginScene()
 		{
-			var slimDxColor = new Color4(window.BackgroundColor.AlphaValue,
+			var slimDXColor = new Color4(window.BackgroundColor.AlphaValue,
 				window.BackgroundColor.RedValue, window.BackgroundColor.GreenValue,
 				window.BackgroundColor.BlueValue);
-			NativeDevice.Clear(SlimD3D9.ClearFlags.Target | SlimD3D9.ClearFlags.ZBuffer, slimDxColor,
+			NativeDevice.Clear(SlimD3D9.ClearFlags.Target | SlimD3D9.ClearFlags.ZBuffer, slimDXColor,
 				1.0f, 0);
 			NativeDevice.BeginScene();
 		}

@@ -62,6 +62,10 @@
       <Project>{EE9847E1-9C76-4ACE-B531-D3EA84F7D741}</Project>
       <Name>DeltaEngine.Content.Disk</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Platforms\TestWithSlimDX\DeltaEngine.TestWithSlimDX.csproj">
+      <Project>{A3260916-CC8D-45B3-83BC-F91EBAEDA3FB}</Project>
+      <Name>DeltaEngine.TestWithSlimDX</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -51,7 +51,7 @@ namespace DeltaEngine.Graphics.SlimDX
 				else if (vertexElement.ElementType == VertexElementType.TextureUV)
 					vertexElements[elementIndex++] = GetVertexTextureCoordinate(vertexElement.Offset);
 				else if (vertexElement.ElementType == VertexElementType.LightMapUV)
-					vertexElements[elementIndex++] = GetVertexLightMapUv(vertexElement.Offset);	
+					vertexElements[elementIndex++] = GetVertexLightMapUV(vertexElement.Offset);	
 			vertexElements[elementIndex] = VertexElementD3D9.VertexDeclarationEnd;
 			vertexDeclaration = new VertexDeclaration(device, vertexElements);
 		}
@@ -88,7 +88,7 @@ namespace DeltaEngine.Graphics.SlimDX
 				DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 0);
 		}
 
-		private static VertexElementD3D9 GetVertexLightMapUv(int offset)
+		private static VertexElementD3D9 GetVertexLightMapUV(int offset)
 		{
 			return new VertexElementD3D9(0, (short)offset, DeclarationType.Float2,
 				DeclarationMethod.Default, DeclarationUsage.TextureCoordinate, 1);
@@ -96,7 +96,7 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		private void CreateVertexShader()
 		{
-			var bytecode = ShaderBytecode.Compile(Encoding.UTF8.GetBytes(Dx9Code), "VS",
+			var bytecode = ShaderBytecode.Compile(Encoding.UTF8.GetBytes(DX9Code), "VS",
 				"vs_2_0", ShaderFlags.None);
 			vertexShader = new VertexShader(device, bytecode);
 		}
@@ -105,7 +105,7 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		private void CreatePixelShader()
 		{
-			var bytecode = ShaderBytecode.Compile(Encoding.UTF8.GetBytes(Dx9Code), "PS",
+			var bytecode = ShaderBytecode.Compile(Encoding.UTF8.GetBytes(DX9Code), "PS",
 				"ps_2_0", ShaderFlags.None);
 			pixelShader = new PixelShader(device, bytecode);
 		}

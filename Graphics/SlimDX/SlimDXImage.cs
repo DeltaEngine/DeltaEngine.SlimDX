@@ -25,6 +25,12 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		private readonly SlimDXDevice device;
 
+		protected override void SetSamplerStateAndTryToLoadImage(Stream fileData)
+		{
+			TryLoadImage(fileData);
+			SetSamplerState();
+		}
+
 		protected override void LoadImage(Stream fileData)
 		{
 			NativeTexture = Texture.FromStream(device.NativeDevice, fileData, Usage.None, Pool.Managed);

@@ -59,9 +59,6 @@
     <Reference Include="DeltaEngine.Rendering2D.Shapes">
 	  <HintPath>$(DeltaEnginePath)\SlimDX\DeltaEngine.Rendering2D.Shapes.dll</HintPath>
     </Reference>
-    <Reference Include="DeltaEngine.Rendering2D.Sprites">
-	  <HintPath>$(DeltaEnginePath)\SlimDX\DeltaEngine.Rendering2D.Sprites.dll</HintPath>
-    </Reference>
     <Reference Include="DeltaEngine.WindowsSlimDX">
 	  <HintPath>$(DeltaEnginePath)\SlimDX\DeltaEngine.WindowsSlimDX.dll</HintPath>
     </Reference>

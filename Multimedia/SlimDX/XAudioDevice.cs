@@ -10,16 +10,11 @@ namespace DeltaEngine.Multimedia.SlimDX
 		public XAudioDevice()
 		{
 			XAudio2 = new XAudio2();
-			MasteringVoice = new MasteringVoice(XAudio2);
+			masteringVoice = new MasteringVoice(XAudio2);
 		}
 
 		public XAudio2 XAudio2 { get; private set; }
-		public MasteringVoice MasteringVoice { get; private set; }
-
-		public bool IsInitialized
-		{
-			get { return XAudio2 != null; }
-		}
+		private MasteringVoice masteringVoice;
 
 		public override void RapidUpdate()
 		{
@@ -36,8 +31,10 @@ namespace DeltaEngine.Multimedia.SlimDX
 
 		private void DisposeMasteringVoice()
 		{
-			MasteringVoice = null;
+			masteringVoice.Dispose();
+			masteringVoice = null;
 		}
+
 		private void DisposeXAudio()
 		{
 			if (XAudio2 != null)
