@@ -34,7 +34,6 @@ namespace DeltaEngine.Platforms
 			Register<SlimDXGeometry>();
 			Register<XAudioSound>();
 			Register<XAudioMusic>();
-			Register<SlimDXVideo>();
 		}
 	}
 }
