@@ -1,4 +1,6 @@
-﻿using DeltaEngine.Graphics.SlimDX;
+﻿using DeltaEngine.Content.Xml;
+using DeltaEngine.Graphics;
+using DeltaEngine.Graphics.SlimDX;
 using DeltaEngine.Input.SlimDX;
 using DeltaEngine.Input.Windows;
 using DeltaEngine.Multimedia.SlimDX;
@@ -14,6 +16,7 @@ namespace DeltaEngine.Platforms
 			RegisterSingleton<FormsWindow>();
 			RegisterSingleton<WindowsSystemInformation>();
 			RegisterSingleton<SlimDXDevice>();
+			RegisterSingleton<Drawing>();
 			RegisterSingleton<SlimDXScreenshotCapturer>();
 			RegisterSingleton<XAudioDevice>();
 			RegisterSingleton<SlimDXMouse>();
@@ -22,6 +25,7 @@ namespace DeltaEngine.Platforms
 			RegisterSingleton<WindowsTouch>();
 			RegisterSingleton<WindowsGamePad>();
 			RegisterSingleton<CursorPositionTranslater>();
+			Register<InputCommands>();
 			if (IsAlreadyInitialized)
 				throw new UnableToRegisterMoreTypesAppAlreadyStarted();
 		}
@@ -34,6 +38,7 @@ namespace DeltaEngine.Platforms
 			Register<SlimDXGeometry>();
 			Register<XAudioSound>();
 			Register<XAudioMusic>();
+			Register<XmlContent>();
 		}
 	}
 }

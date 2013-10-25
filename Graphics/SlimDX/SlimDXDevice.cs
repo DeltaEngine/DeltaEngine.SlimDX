@@ -18,7 +18,7 @@ namespace DeltaEngine.Graphics.SlimDX
 			: base(window)
 		{
 			this.settings = settings;
-			d3D = new SlimD3D9.Direct3D();
+			d3D = new Direct3D();
 			InitializeDevice();
 			InitializeProjectionMatrix();
 			window.ViewportSizeChanged += OnViewportSizeChanged;
@@ -26,59 +26,59 @@ namespace DeltaEngine.Graphics.SlimDX
 		}
 
 		private readonly Settings settings;
-		private readonly SlimD3D9.Direct3D d3D;
+		private readonly Direct3D d3D;
 
 		public SlimD3D9.Device NativeDevice { get; private set; }
 
 		private void InitializeDevice()
 		{
-			NativeDevice = new SlimD3D9.Device(d3D, 0, SlimD3D9.DeviceType.Hardware,
-				(IntPtr)window.Handle, SlimD3D9.CreateFlags.HardwareVertexProcessing,
+			NativeDevice = new SlimD3D9.Device(d3D, 0, DeviceType.Hardware,
+				(IntPtr)window.Handle, CreateFlags.HardwareVertexProcessing,
 				GetPresentParameters());
 		}
 
-		private SlimD3D9.PresentParameters GetPresentParameters()
+		private PresentParameters GetPresentParameters()
 		{
-			return new SlimD3D9.PresentParameters
+			return new PresentParameters
 			{
 				Windowed = !window.IsFullscreen,
 				DeviceWindowHandle = (IntPtr)window.Handle,
-				SwapEffect = SlimD3D9.SwapEffect.Discard,
-				PresentationInterval = SlimD3D9.PresentInterval.Immediate,
+				SwapEffect = SwapEffect.Discard,
+				PresentationInterval = settings.UseVSync ? PresentInterval.Default : PresentInterval.Immediate,
 				BackBufferWidth = (int)window.ViewportPixelSize.Width,
 				BackBufferHeight = (int)window.ViewportPixelSize.Height,
 				EnableAutoDepthStencil = true,
 				AutoDepthStencilFormat = GetDepthBufferFormat(),
 				//makes some GPUs crash CreateWithSwapChain with E_INVALIDARG
-				Multisample = SlimD3D9.MultisampleType.None,//GetAntiAliasingType(),
+				Multisample = MultisampleType.None,//GetAntiAliasingType(),
 				MultisampleQuality = 0//settings.AntiAliasingSamples > 1 ? 1 : 0
 			};
 		}
 
-		private SlimD3D9.Format GetDepthBufferFormat()
+		private Format GetDepthBufferFormat()
 		{
 			switch (settings.DepthBufferBits)
 			{
 			case 16:
-				return SlimD3D9.Format.D16;
+				return Format.D16;
 			case 32:
-				return SlimD3D9.Format.D32;
+				return Format.D32;
 			}
-			return SlimD3D9.Format.D24S8;
+			return Format.D24S8;
 		}
 
-		private SlimD3D9.MultisampleType GetAntiAliasingType()
+		private MultisampleType GetAntiAliasingType()
 		{
 			switch (settings.AntiAliasingSamples)
 			{
 			case 2:
-				return SlimD3D9.MultisampleType.TwoSamples;
+				return MultisampleType.TwoSamples;
 			case 3:
-				return SlimD3D9.MultisampleType.ThreeSamples;
+				return MultisampleType.ThreeSamples;
 			case 4:
-				return SlimD3D9.MultisampleType.FourSamples;
+				return MultisampleType.FourSamples;
 			}
-			return SlimD3D9.MultisampleType.None;
+			return MultisampleType.None;
 		}
 
 		private void OnViewportSizeChanged(Size displaySize)
@@ -121,7 +121,7 @@ namespace DeltaEngine.Graphics.SlimDX
 			var slimDXColor = new Color4(window.BackgroundColor.AlphaValue,
 				window.BackgroundColor.RedValue, window.BackgroundColor.GreenValue,
 				window.BackgroundColor.BlueValue);
-			NativeDevice.Clear(SlimD3D9.ClearFlags.Target | SlimD3D9.ClearFlags.ZBuffer, slimDXColor,
+			NativeDevice.Clear(ClearFlags.Target | ClearFlags.ZBuffer, slimDXColor,
 				1.0f, 0);
 			NativeDevice.BeginScene();
 		}
@@ -199,7 +199,7 @@ namespace DeltaEngine.Graphics.SlimDX
 		{
 			if (currentBlendMode == blendMode)
 				return;
-			NativeDevice.SetRenderState(SlimD3D9.RenderState.AlphaRef, 1);
+			NativeDevice.SetRenderState(RenderState.AlphaRef, 1);
 			switch (blendMode)
 			{
 			case BlendMode.Opaque:

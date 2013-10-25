@@ -62,12 +62,15 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		public override void Fill(byte[] colors)
 		{
-			if (PixelSize.Width * PixelSize.Height * 4 != colors.Length)
+			if (PixelSize.Width * PixelSize.Height * Color.SizeInBytes != colors.Length)
 				throw new InvalidNumberOfBytes(PixelSize);
 			if (NativeTexture == null)
 				NativeTexture = new Texture(device.NativeDevice, (int)PixelSize.Width,
-					(int)PixelSize.Height, 0, Usage.None, Format.A8B8G8R8, Pool.Managed);
-			NativeTexture.Fill((Fill2DCallback)null);
+					(int)PixelSize.Height, 1, Usage.None, Format.A8R8G8B8, Pool.Managed);
+			var rectangle = NativeTexture.LockRectangle(0, LockFlags.None);
+			for (int i = 0; i < colors.Length; i++)
+				rectangle.Data.Write(colors[i]);
+			NativeTexture.UnlockRectangle(0);
 		}
 
 		protected override void SetSamplerState()
