@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using DeltaEngine.Core;
 using SlimDX.Multimedia;
 using SlimDX.XAudio2;
 
@@ -13,8 +12,8 @@ namespace DeltaEngine.Multimedia.SlimDX
 	/// </summary>
 	public class XAudioSound : Sound
 	{
-		protected XAudioSound(string contentName, XAudioDevice device, Settings settings)
-			: base(contentName, settings)
+		protected XAudioSound(string contentName, XAudioDevice device)
+			: base(contentName)
 		{
 			xAudio = device.XAudio2;
 		}
@@ -66,7 +65,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 			base.DisposeData();
 			if (buffer != null)
 				buffer.AudioData.Dispose();
-
 			buffer = null;
 		}
 
@@ -75,7 +73,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 			var soundInstance = instanceToPlay.Handle as SourceVoice;
 			if (soundInstance == null)
 				return;
-
 			soundInstance.SubmitSourceBuffer(buffer);
 			soundInstance.Volume = instanceToPlay.Volume;
 			float left = 0.5f - instanceToPlay.Panning / 2;
@@ -93,7 +90,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 			var soundInstance = instanceToStop.Handle as SourceVoice;
 			if (soundInstance != null)
 				soundInstance.Stop();
-
 			if (instancesPlaying.Contains(instanceToStop))
 				instancesPlaying.Remove(instanceToStop);
 		}
@@ -102,7 +98,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			if (buffer == null)
 				return;
-
 			var source = new SourceVoice(xAudio, format);
 			source.StreamEnd += (sender, args) => instancesPlaying.Remove(instanceToFill);
 			instanceToFill.Handle = source;
@@ -116,7 +111,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 				soundInstance.Stop();
 				soundInstance.Dispose();
 			}
-
 			instanceToRemove.Handle = null;
 		}
 

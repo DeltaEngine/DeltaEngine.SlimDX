@@ -62,7 +62,6 @@ namespace DeltaEngine.Graphics.SlimDX
 		public override void Draw()
 		{
 			const int VerticesPerTriangle = 3;
-			dxDevice.SetClockwiseCullMode();
 			nativeDevice.SetStreamSource(0, vertexBuffer, 0, Format.Stride);
 			nativeDevice.Indices = indexBuffer;
 			nativeDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, NumberOfVertices, 0,

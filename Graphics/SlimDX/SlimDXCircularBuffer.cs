@@ -18,11 +18,8 @@ namespace DeltaEngine.Graphics.SlimDX
 			VerticesMode drawMode = VerticesMode.Triangles)
 			: base(device, shader, blendMode, drawMode)
 		{
-			dxDevice = (SlimDXDevice)device;
-			dxDevice.DisposeNativeBuffers += DisposeNative;
+			(device as SlimDXDevice).DisposeNativeBuffers += DisposeNative;
 		}
-
-		private readonly SlimDXDevice dxDevice;
 
 		protected override void CreateNative()
 		{
@@ -111,7 +108,6 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		protected override void DrawChunk(Chunk chunk)
 		{
-			dxDevice.SetCounterClockwiseCullMode();
 			if (UsesIndexBuffer)
 				DrawChunkWithIndices(chunk);
 			else

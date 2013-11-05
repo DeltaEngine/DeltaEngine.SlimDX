@@ -159,6 +159,21 @@ namespace DeltaEngine.Graphics.SlimDX
 			return new SlimDXCircularBuffer(this, shader, blendMode, drawMode);
 		}
 
+		public override bool CullBackFaces
+		{
+			get { return cullBackFaces; }
+			set
+			{
+				if (cullBackFaces == value)
+					return;
+				cullBackFaces = value;
+				NativeDevice.SetRenderState(RenderState.CullMode,
+					cullBackFaces ? Cull.Counterclockwise : Cull.None);
+			}
+		}
+
+		private bool cullBackFaces;
+
 		public override void DisableDepthTest()
 		{			
 			NativeDevice.SetRenderState(RenderState.ZEnable, false);
@@ -166,26 +181,7 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		public override void EnableDepthTest()
 		{
-			NativeDevice.SetRenderState(RenderState.CullMode, Cull.Clockwise);
 			NativeDevice.SetRenderState(RenderState.ZEnable, true);
-		}
-
-		public void SetCounterClockwiseCullMode()
-		{
-			if (cullModeClockwise)
-			{
-				NativeDevice.SetRenderState(RenderState.CullMode, Cull.Counterclockwise);
-				cullModeClockwise = false;
-			}
-		}
-
-		public void SetClockwiseCullMode()
-		{
-			if (!cullModeClockwise)
-			{
-				NativeDevice.SetRenderState(RenderState.CullMode, Cull.Clockwise);
-				cullModeClockwise = true;
-			}
 		}
 
 		public override void Dispose()

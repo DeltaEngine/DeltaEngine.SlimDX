@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using DeltaEngine.Core;
 using DeltaEngine.Extensions;
 using DeltaEngine.Multimedia.MusicStreams;
 using SlimDX.Multimedia;
@@ -14,8 +13,8 @@ namespace DeltaEngine.Multimedia.SlimDX
 	/// </summary>
 	public class XAudioMusic : Music
 	{
-		protected XAudioMusic(string contentName, XAudioDevice device, Settings settings)
-			: base(contentName, device, settings)
+		protected XAudioMusic(string contentName, XAudioDevice device)
+			: base(contentName, device)
 		{
 			CreateBuffers();
 		}
@@ -27,7 +26,7 @@ namespace DeltaEngine.Multimedia.SlimDX
 				var stream = new MemoryStream();
 				fileData.CopyTo(stream);
 				stream.Position = 0;
-				musicStream = new MusicStreamFactory().Load(stream, "Content/" + Name);
+				musicStream = new MusicStreamFactory().Load(stream, Path.Combine("Content", Name));
 				source = new SourceVoice((device as XAudioDevice).XAudio2,
 					new WaveFormat
 					{
@@ -42,7 +41,7 @@ namespace DeltaEngine.Multimedia.SlimDX
 			catch (Exception ex)
 			{
 				if (Debugger.IsAttached)
-					throw new MusicNotFoundOrAccessible(Name, ex);
+					throw new CouldNotLoadMusicFromFilestream(Name, ex);
 			}
 		}
 
@@ -124,7 +123,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			for (int i = 0; i < NumberOfBuffers; i++)
 				buffers[i].Dispose();
-
 			source.FlushSourceBuffers();
 			source.Dispose();
 			source = null;

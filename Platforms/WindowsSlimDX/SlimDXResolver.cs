@@ -5,6 +5,7 @@ using DeltaEngine.Input.SlimDX;
 using DeltaEngine.Input.Windows;
 using DeltaEngine.Multimedia.SlimDX;
 using DeltaEngine.Platforms.Windows;
+using DeltaEngine.Rendering2D;
 
 namespace DeltaEngine.Platforms
 {
@@ -17,6 +18,7 @@ namespace DeltaEngine.Platforms
 			RegisterSingleton<WindowsSystemInformation>();
 			RegisterSingleton<SlimDXDevice>();
 			RegisterSingleton<Drawing>();
+			RegisterSingleton<BatchRenderer>();
 			RegisterSingleton<SlimDXScreenshotCapturer>();
 			RegisterSingleton<XAudioDevice>();
 			RegisterSingleton<SlimDXMouse>();
