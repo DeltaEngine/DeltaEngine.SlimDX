@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using DeltaEngine.Content;
-using DeltaEngine.Core;
 using DeltaEngine.Datatypes;
 using SlimDX.Direct3D9;
 
@@ -34,12 +33,13 @@ namespace DeltaEngine.Graphics.SlimDX
 		protected override void LoadImage(Stream fileData)
 		{
 			NativeTexture = Texture.FromStream(device.NativeDevice, fileData, Usage.None, Pool.Managed);
-			if (HasAlpha && NativeTexture.GetLevelDescription(0).Format != Format.A8R8G8B8)
-				Logger.Warning("Image '" + Name +
-					"' is supposed to have alpha pixels, but the image pixel format is not using alpha.");
-			else if (!HasAlpha && NativeTexture.GetLevelDescription(0).Format == Format.A8R8G8B8)
-				Logger.Warning("Image '" + Name +
-					"' is supposed to have no alpha pixels, but the image pixel format is using alpha.");
+			//Disabled for M5 release due image server conversion not being enabled right now
+			//if (HasAlpha && NativeTexture.GetLevelDescription(0).Format != Format.A8R8G8B8)
+			//	Logger.Warning("Image '" + Name +
+			//		"' is supposed to have alpha pixels, but the image pixel format is not using alpha.");
+			//else if (!HasAlpha && NativeTexture.GetLevelDescription(0).Format == Format.A8R8G8B8)
+			//	Logger.Warning("Image '" + Name +
+			//		"' is supposed to have no alpha pixels, but the image pixel format is using alpha.");
 			var textureSize = new Size(NativeTexture.GetLevelDescription(0).Width,
 				NativeTexture.GetLevelDescription(0).Height);
 			CompareActualSizeMetadataSize(textureSize);

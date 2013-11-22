@@ -26,7 +26,7 @@ namespace DeltaEngine.Multimedia.SlimDX
 				var stream = new MemoryStream();
 				fileData.CopyTo(stream);
 				stream.Position = 0;
-				musicStream = new MusicStreamFactory().Load(stream, Path.Combine("Content", Name));
+				musicStream = new MusicStreamFactory().Load(stream);
 				source = new SourceVoice((device as XAudioDevice).XAudio2,
 					new WaveFormat
 					{
@@ -56,7 +56,6 @@ namespace DeltaEngine.Multimedia.SlimDX
 		}
 
 		private StreamBuffer[] buffers;
-		private const int NumberOfBuffers = 2;
 
 		protected override void PlayNativeMusic(float volume)
 		{

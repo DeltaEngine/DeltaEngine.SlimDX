@@ -6,12 +6,37 @@ using DeltaEngine.Input.Windows;
 using DeltaEngine.Multimedia.SlimDX;
 using DeltaEngine.Platforms.Windows;
 using DeltaEngine.Rendering2D;
+#if !DEBUG 
+using System;
+using DeltaEngine.Core;
+using DeltaEngine.Extensions;
+#endif
 
 namespace DeltaEngine.Platforms
 {
 	internal class SlimDXResolver : AppRunner
 	{
 		public SlimDXResolver()
+		{
+#if DEBUG
+			InitializeSlimDX();
+#else
+			// Some machines with missing frameworks initialization will crash, we need useful errors
+			try
+			{
+				InitializeSlimDX();
+			}
+			catch (Exception exception)
+			{
+				Logger.Error(exception);
+				if (StackTraceExtensions.IsStartedFromNunitConsole())
+					throw;
+				DisplayMessageBoxAndCloseApp("Fatal SlimDX Initialization Error", exception);
+			}
+#endif
+		}
+
+		private void InitializeSlimDX()
 		{
 			RegisterCommonEngineSingletons();
 			RegisterSingleton<FormsWindow>();

@@ -135,7 +135,7 @@ namespace DeltaEngine.Graphics.SlimDX
 			if (ReloadNativeBuffersData != null)
 				ReloadNativeBuffersData();
 			currentBlendMode = BlendMode.Opaque;
-			cullModeClockwise = false;
+			cullBackFaces = false;
 			deviceMustBeReset = false;
 		}
 
@@ -143,7 +143,6 @@ namespace DeltaEngine.Graphics.SlimDX
 		public Action ReloadNativeBuffersData;
 
 		private BlendMode currentBlendMode = BlendMode.Opaque;
-		private bool cullModeClockwise;
 
 		public override void Present()
 		{

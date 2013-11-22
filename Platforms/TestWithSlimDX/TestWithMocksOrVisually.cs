@@ -18,7 +18,8 @@ namespace DeltaEngine.Platforms
 		[SetUp]
 		public void InitializeResolver()
 		{
-			if (StackTraceExtensions.StartedFromNCrunch)
+			if (StackTraceExtensions.StartedFromNCrunch ||
+				StackTraceExtensions.IsStartedFromTeamCityNUnitLauncher())
 			{
 				resolver = new MockResolver();
 				return;
