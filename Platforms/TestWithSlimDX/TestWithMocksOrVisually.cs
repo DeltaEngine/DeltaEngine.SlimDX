@@ -18,8 +18,7 @@ namespace DeltaEngine.Platforms
 		[SetUp]
 		public void InitializeResolver()
 		{
-			if (StackTraceExtensions.StartedFromNCrunch ||
-				StackTraceExtensions.IsStartedFromTeamCityNUnitLauncher())
+			if (StackTraceExtensions.ForceUseOfMockResolver())
 			{
 				resolver = new MockResolver();
 				return;
@@ -29,7 +28,7 @@ namespace DeltaEngine.Platforms
 				StackTraceExtensions.SetUnitTestName(TestContext.CurrentContext.Test.FullName);
 			resolver = new SlimDXResolver();
 			if (StackTraceExtensions.IsCloseAfterFirstFrameAttributeUsed() ||
-				StackTraceExtensions.IsStartedFromNunitConsole())
+				StackTraceExtensions.StartedFromNCrunchOrNunitConsole)
 				Resolve<Window>().CloseAfterFrame();
 			//ncrunch: no coverage end
 		}

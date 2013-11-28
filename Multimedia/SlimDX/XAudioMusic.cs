@@ -57,17 +57,21 @@ namespace DeltaEngine.Multimedia.SlimDX
 
 		private StreamBuffer[] buffers;
 
-		protected override void PlayNativeMusic(float volume)
+		protected override void PlayNativeMusic()
 		{
 			musicStream.Rewind();
 			source.Start();
-			source.Volume = volume;
 			isPlaying = true;
 			playStartTime = DateTime.Now;
 		}
 
 		private DateTime playStartTime;
 		private bool isPlaying;
+
+		protected override void SetPlayingVolume(float value)
+		{
+			source.Volume = value;
+		}
 
 		public override void Run()
 		{
