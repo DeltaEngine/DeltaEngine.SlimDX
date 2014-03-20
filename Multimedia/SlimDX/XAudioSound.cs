@@ -15,7 +15,7 @@ namespace DeltaEngine.Multimedia.SlimDX
 		protected XAudioSound(string contentName, XAudioDevice device)
 			: base(contentName)
 		{
-			xAudio = device.XAudio2;
+			xAudio = device.XAudio;
 		}
 
 		private readonly XAudio2 xAudio;
@@ -24,16 +24,21 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			try
 			{
-				var waveStream = new WaveStream(fileData);
-				format = waveStream.Format;
-				length = CalculateLengthInSeconds(format, (int)waveStream.Length);
-				buffer = CreateAudioBuffer(waveStream);
+				TryLoadData(fileData);
 			}
 			catch (Exception ex)
 			{
 				if (Debugger.IsAttached)
 					throw new SoundNotFoundOrAccessible(Name, ex);
 			}
+		}
+
+		private void TryLoadData(Stream fileData)
+		{
+			var waveStream = new WaveStream(fileData);
+			format = waveStream.Format;
+			length = CalculateLengthInSeconds(format, (int)waveStream.Length);
+			buffer = CreateAudioBuffer(waveStream);
 		}
 
 		private WaveFormat format;
@@ -96,7 +101,7 @@ namespace DeltaEngine.Multimedia.SlimDX
 
 		protected override void CreateChannel(SoundInstance instanceToFill)
 		{
-			if (buffer == null)
+			if (buffer == null || xAudio == null)
 				return;
 			var source = new SourceVoice(xAudio, format);
 			source.StreamEnd += (sender, args) => instancesPlaying.Remove(instanceToFill);

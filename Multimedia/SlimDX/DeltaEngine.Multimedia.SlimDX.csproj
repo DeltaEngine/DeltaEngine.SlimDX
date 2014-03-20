@@ -51,17 +51,17 @@
       <Project>{82B25FA6-7215-4FE3-8F8C-94DFC5F9BDB8}</Project>
       <Name>DeltaEngine.Graphics.SlimDX</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Platforms\DeltaEngine.Platforms.csproj">
-      <Project>{BAE8830E-5F62-48D6-B772-C4B1E8665FB3}</Project>
-      <Name>DeltaEngine.Platforms</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Rendering2D\DeltaEngine.Rendering2D.csproj">
       <Project>{BDDB4AA4-5D31-43B3-9A3B-BF3030EDE927}</Project>
       <Name>DeltaEngine.Rendering2D</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MusicStreams\DeltaEngine.Multimedia.MusicStreams.csproj">
+    <ProjectReference Include="..\..\Multimedia\MusicStreams\DeltaEngine.Multimedia.MusicStreams.csproj">
       <Project>{769F9D01-D4A1-4C85-9F11-F721CDFC94DC}</Project>
       <Name>DeltaEngine.Multimedia.MusicStreams</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Multimedia\VideoStreams\DeltaEngine.Multimedia.VideoStreams.csproj">
+      <Project>{27487228-2ADB-447B-95D3-6F6053999281}</Project>
+      <Name>DeltaEngine.Multimedia.VideoStreams</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -69,7 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SlimDXVideo.cs" />
     <Compile Include="StreamBuffer.cs" />
+    <Compile Include="VideoImage.cs" />
     <Compile Include="XAudioDevice.cs" />
     <Compile Include="XAudioMusic.cs" />
     <Compile Include="XAudioSound.cs" />

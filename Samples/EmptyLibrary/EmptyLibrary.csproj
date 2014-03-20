@@ -35,16 +35,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DeltaEngine.csproj">
-      <Project>{20FA8D33-A964-4000-AD82-67BD6900793B}</Project>
-      <Name>DeltaEngine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Platforms\WindowsSlimDX\DeltaEngine.WindowsSlimDX.csproj">
-      <Project>{C12EBE75-67B5-4257-8A6E-C844601746E8}</Project>
-      <Name>DeltaEngine.WindowsSlimDX</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

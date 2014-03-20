@@ -1,11 +1,16 @@
-﻿using DeltaEngine.Content.Xml;
+﻿using DeltaEngine.Content.Json;
+using DeltaEngine.Content.Xml;
 using DeltaEngine.Graphics;
 using DeltaEngine.Graphics.SlimDX;
 using DeltaEngine.Input.SlimDX;
-using DeltaEngine.Input.Windows;
 using DeltaEngine.Multimedia.SlimDX;
+using DeltaEngine.Physics2D;
+using DeltaEngine.Physics2D.Farseer;
+using DeltaEngine.Physics3D;
+using DeltaEngine.Physics3D.Jitter;
 using DeltaEngine.Platforms.Windows;
 using DeltaEngine.Rendering2D;
+using DeltaEngine.Rendering3D;
 #if !DEBUG 
 using System;
 using DeltaEngine.Core;
@@ -14,17 +19,17 @@ using DeltaEngine.Extensions;
 
 namespace DeltaEngine.Platforms
 {
-	internal class SlimDXResolver : AppRunner
+	public class SlimDXResolver : AppRunner
 	{
 		public SlimDXResolver()
 		{
 #if DEBUG
-			InitializeSlimDX();
+			TryInitializeSlimDX();
 #else
 			// Some machines with missing frameworks initialization will crash, we need useful errors
 			try
 			{
-				InitializeSlimDX();
+				TryInitializeSlimDX();
 			}
 			catch (Exception exception)
 			{
@@ -36,22 +41,21 @@ namespace DeltaEngine.Platforms
 #endif
 		}
 
-		private void InitializeSlimDX()
+		private void TryInitializeSlimDX()
 		{
 			RegisterCommonEngineSingletons();
 			RegisterSingleton<FormsWindow>();
 			RegisterSingleton<WindowsSystemInformation>();
 			RegisterSingleton<SlimDXDevice>();
 			RegisterSingleton<Drawing>();
-			RegisterSingleton<BatchRenderer>();
+			RegisterSingleton<BatchRenderer2D>();
+			RegisterSingleton<BatchRenderer3D>();
 			RegisterSingleton<SlimDXScreenshotCapturer>();
 			RegisterSingleton<XAudioDevice>();
 			RegisterSingleton<SlimDXMouse>();
 			RegisterSingleton<SlimDXKeyboard>();
 			RegisterSingleton<SlimDXGamePad>();
-			RegisterSingleton<WindowsTouch>();
-			RegisterSingleton<WindowsGamePad>();
-			RegisterSingleton<CursorPositionTranslater>();
+			RegisterSingleton<SlimDXTouch>();
 			Register<InputCommands>();
 			if (IsAlreadyInitialized)
 				throw new UnableToRegisterMoreTypesAppAlreadyStarted();
@@ -65,7 +69,17 @@ namespace DeltaEngine.Platforms
 			Register<SlimDXGeometry>();
 			Register<XAudioSound>();
 			Register<XAudioMusic>();
+			Register<SlimDXVideo>();
 			Register<XmlContent>();
+			Register<JsonContent>();
+		}
+
+		protected override void RegisterPhysics()
+		{
+			RegisterSingleton<FarseerPhysics>();
+			RegisterSingleton<JitterPhysics>();
+			Register<AffixToPhysics2D>();
+			Register<AffixToPhysics3D>();
 		}
 	}
 }

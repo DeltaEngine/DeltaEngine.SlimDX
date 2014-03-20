@@ -37,14 +37,13 @@
       <HintPath>..\..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\DeltaEngine.csproj">
       <Project>{20FA8D33-A964-4000-AD82-67BD6900793B}</Project>
       <Name>DeltaEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EmptyApp.csproj">
+    <ProjectReference Include="..\..\..\Samples\EmptyApp\EmptyApp.csproj">
       <Project>{61A2515E-AC1B-413A-8798-7ABCE6DD8D93}</Project>
       <Name>EmptyApp</Name>
     </ProjectReference>

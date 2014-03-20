@@ -1,10 +1,7 @@
 ﻿using System;
 using DeltaEngine.Core;
-using DeltaEngine.Entities;
 using DeltaEngine.Extensions;
-using DeltaEngine.Graphics;
 using DeltaEngine.Platforms.Mocks;
-using DeltaEngine.Rendering2D;
 using NUnit.Framework;
 
 namespace DeltaEngine.Platforms
@@ -33,7 +30,18 @@ namespace DeltaEngine.Platforms
 			//ncrunch: no coverage end
 		}
 
-		protected AppRunner resolver;
+		private AppRunner resolver;
+
+		protected bool IsMockResolver
+		{
+			get { return resolver is MockResolver; }
+		}
+
+		protected void RegisterMock<T>(T instance) where T : class
+		{
+			if (IsMockResolver)
+				(resolver as MockResolver).RegisterMock(instance);
+		}
 
 		[TearDown]
 		public void RunTestAndDisposeResolverWhenDone()
@@ -63,13 +71,11 @@ namespace DeltaEngine.Platforms
 		protected void AdvanceTimeAndUpdateEntities(
 			float timeToAddInSeconds = 1.0f / Settings.DefaultUpdatesPerSecond)
 		{
-			var renderer = resolver.Resolve<BatchRenderer>();
-			var drawing = resolver.Resolve<Drawing>();
 			if (CheckIfWeNeedToRunTickToAvoidInitializationDelay())
-				RunTickOnce(renderer, drawing);
+				resolver.RunTick();
 			var startTimeMs = GlobalTime.Current.Milliseconds;
 			do
-				RunTickOnce(renderer, drawing);
+				resolver.RunTick();
 			while (GlobalTime.Current.Milliseconds - startTimeMs +
 				MathExtensions.Epsilon < timeToAddInSeconds * 1000);
 		}
@@ -77,16 +83,6 @@ namespace DeltaEngine.Platforms
 		private bool CheckIfWeNeedToRunTickToAvoidInitializationDelay()
 		{
 			return !(resolver is MockResolver) && GlobalTime.Current.Milliseconds == 0;
-		}
-
-		private static void RunTickOnce(BatchRenderer batchRenderer, Drawing drawing)
-		{
-			GlobalTime.Current.Update();
-			EntitiesRunner.Current.UpdateAndDrawAllEntities(() =>
-			{
-				batchRenderer.DrawAndResetBatches();
-				drawing.DrawEverythingInCurrentLayer();
-			});
 		}
 	}
 }

@@ -70,8 +70,10 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		protected override void DisposeData()
 		{
-			vertexBuffer.Dispose();
-			indexBuffer.Dispose();
+			if (vertexBuffer != null)
+				vertexBuffer.Dispose();
+			if (vertexBuffer != null)
+				indexBuffer.Dispose();
 		}
 
 		private void ReloadBuffersData()

@@ -1,25 +1,29 @@
-﻿using SlimDX.XAudio2;
+﻿using DeltaEngine.Extensions;
+using SlimDX.XAudio2;
 
 namespace DeltaEngine.Multimedia.SlimDX
 {
 	/// <summary>
-	/// Native implementation of an audio context.
+	/// Native audio context implementation. Crashes rarely on our CI server, there it is disabled.
 	/// </summary>
 	public class XAudioDevice : SoundDevice
 	{
 		public XAudioDevice()
 		{
-			XAudio2 = new XAudio2();
-			masteringVoice = new MasteringVoice(XAudio2);
+			if (StackTraceExtensions.StartedFromNUnitConsoleButNotFromNCrunch)
+				return;
+			XAudio = new XAudio2();
+			masteringVoice = new MasteringVoice(XAudio);
 		}
 
-		public XAudio2 XAudio2 { get; private set; }
+		public XAudio2 XAudio { get; private set; }
 		private MasteringVoice masteringVoice;
 
 		public override void RapidUpdate()
 		{
 			base.RapidUpdate();
-			XAudio2.CommitChanges(XAudio2.CommitAll);
+			if (XAudio != null)
+				XAudio.CommitChanges(XAudio2.CommitAll);
 		}
 
 		public override void Dispose()
@@ -31,15 +35,16 @@ namespace DeltaEngine.Multimedia.SlimDX
 
 		private void DisposeMasteringVoice()
 		{
-			masteringVoice.Dispose();
+			if (masteringVoice != null)
+				masteringVoice.Dispose();
 			masteringVoice = null;
 		}
 
 		private void DisposeXAudio()
 		{
-			if (XAudio2 != null)
-				XAudio2.Dispose();
-			XAudio2 = null;
+			if (XAudio != null)
+				XAudio.Dispose();
+			XAudio = null;
 		}
 	}
 }

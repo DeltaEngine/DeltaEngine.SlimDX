@@ -44,11 +44,11 @@
       <Project>{20FA8D33-A964-4000-AD82-67BD6900793B}</Project>
       <Name>DeltaEngine</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DeltaEngine.Input.csproj">
+    <ProjectReference Include="..\..\Input\DeltaEngine.Input.csproj">
       <Project>{CC65E69E-FAFD-4C2B-85EB-5E57FD3AF847}</Project>
       <Name>DeltaEngine.Input</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Windows\DeltaEngine.Input.Windows.csproj">
+    <ProjectReference Include="..\..\Input\Windows\DeltaEngine.Input.Windows.csproj">
       <Project>{C0D2430E-714D-476C-80E7-5C80A7FA68EE}</Project>
       <Name>DeltaEngine.Input.Windows</Name>
     </ProjectReference>

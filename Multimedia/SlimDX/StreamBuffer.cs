@@ -26,26 +26,28 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			if (stream == null)
 				return false;
-
 			try
 			{
-				int size = stream.Read(byteBuffer, BufferSize);
-				if (size <= 0)
-					return false;
-
-				bufferStream.Position = 0;
-				bufferStream.Write(byteBuffer, 0, size);
-				bufferStream.Position = 0;
-				XAudioBuffer.AudioData = bufferStream;
-				XAudioBuffer.AudioBytes = size;
-				int blockAlign = stream.Channels * 2;
-				XAudioBuffer.PlayLength = size / blockAlign;
+				return TryFillFromStream(stream);
 			}
 			catch (Exception)
 			{
 				return false;
 			}
+		}
 
+		private bool TryFillFromStream(BaseMusicStream stream)
+		{
+			int size = stream.Read(byteBuffer, BufferSize);
+			if (size <= 0)
+				return false;
+			bufferStream.Position = 0;
+			bufferStream.Write(byteBuffer, 0, size);
+			bufferStream.Position = 0;
+			XAudioBuffer.AudioData = bufferStream;
+			XAudioBuffer.AudioBytes = size;
+			int blockAlign = stream.Channels * 2;
+			XAudioBuffer.PlayLength = size / blockAlign;
 			return true;
 		}
 

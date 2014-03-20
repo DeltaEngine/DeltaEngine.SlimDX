@@ -1,11 +1,10 @@
 ﻿using System;
 using DeltaEngine.Core;
-using DeltaEngine.Datatypes;
 using DeltaEngine.Graphics.Vertices;
 using SlimDX;
-using Matrix = DeltaEngine.Datatypes.Matrix;
 using SlimD3D9 = SlimDX.Direct3D9;
 using SlimDX.Direct3D9;
+using Size = DeltaEngine.Datatypes.Size;
 
 namespace DeltaEngine.Graphics.SlimDX
 {
@@ -20,7 +19,6 @@ namespace DeltaEngine.Graphics.SlimDX
 			this.settings = settings;
 			d3D = new Direct3D();
 			InitializeDevice();
-			InitializeProjectionMatrix();
 			window.ViewportSizeChanged += OnViewportSizeChanged;
 			window.FullscreenChanged += OnFullscreenChanged;
 		}
@@ -32,9 +30,8 @@ namespace DeltaEngine.Graphics.SlimDX
 
 		private void InitializeDevice()
 		{
-			NativeDevice = new SlimD3D9.Device(d3D, 0, DeviceType.Hardware,
-				(IntPtr)window.Handle, CreateFlags.HardwareVertexProcessing,
-				GetPresentParameters());
+			NativeDevice = new SlimD3D9.Device(d3D, 0, DeviceType.Hardware, window.Handle,
+				CreateFlags.HardwareVertexProcessing, GetPresentParameters());
 		}
 
 		private PresentParameters GetPresentParameters()
@@ -42,7 +39,7 @@ namespace DeltaEngine.Graphics.SlimDX
 			return new PresentParameters
 			{
 				Windowed = !window.IsFullscreen,
-				DeviceWindowHandle = (IntPtr)window.Handle,
+				DeviceWindowHandle = window.Handle,
 				SwapEffect = SwapEffect.Discard,
 				PresentationInterval = settings.UseVSync ? PresentInterval.Default : PresentInterval.Immediate,
 				BackBufferWidth = (int)window.ViewportPixelSize.Width,
@@ -98,12 +95,6 @@ namespace DeltaEngine.Graphics.SlimDX
 			deviceMustBeReset = true;
 		}
 
-		private void InitializeProjectionMatrix()
-		{
-			var projection = Matrix.CreateOrthoProjection(window.ViewportPixelSize);
-			SetProjectionMatrix(projection);
-		}
-
 		public override void Clear()
 		{
 			if (NativeDevice == null)
@@ -135,7 +126,6 @@ namespace DeltaEngine.Graphics.SlimDX
 			if (ReloadNativeBuffersData != null)
 				ReloadNativeBuffersData();
 			currentBlendMode = BlendMode.Opaque;
-			cullBackFaces = false;
 			deviceMustBeReset = false;
 		}
 
@@ -158,20 +148,26 @@ namespace DeltaEngine.Graphics.SlimDX
 			return new SlimDXCircularBuffer(this, shader, blendMode, drawMode);
 		}
 
-		public override bool CullBackFaces
+		protected override void EnableClockwiseBackfaceCulling()
 		{
-			get { return cullBackFaces; }
-			set
-			{
-				if (cullBackFaces == value)
-					return;
-				cullBackFaces = value;
-				NativeDevice.SetRenderState(RenderState.CullMode,
-					cullBackFaces ? Cull.Counterclockwise : Cull.None);
-			}
+			if (isCullingEnabled)
+				return;
+			isCullingEnabled = true;
+			NativeDevice.SetRenderState(RenderState.CullMode, Cull.Clockwise);
 		}
 
-		private bool cullBackFaces;
+		/// <summary>
+		/// Cull.Clockwise Culling is enabled by default in DirectX, but needs to be set once in SlimDX
+		/// </summary>
+		private bool isCullingEnabled;
+
+		protected override void DisableCulling()
+		{
+			if (!isCullingEnabled)
+				return;
+			isCullingEnabled = false;
+			NativeDevice.SetRenderState(RenderState.CullMode, Cull.None);
+		}
 
 		public override void DisableDepthTest()
 		{			

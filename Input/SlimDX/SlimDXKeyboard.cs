@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using DeltaEngine.Core;
 using DInput = SlimDX.DirectInput;
 
@@ -12,7 +13,7 @@ namespace DeltaEngine.Input.SlimDX
 		public SlimDXKeyboard(Window window)
 		{
 			IsAvailable = true;
-			windowHandle = (IntPtr)window.Handle;
+			windowHandle = window.Handle;
 			CreateNativeKeyboard();
 		}
 
@@ -56,5 +57,14 @@ namespace DeltaEngine.Input.SlimDX
 			if (keyboardStates[key] == State.Pressing)
 				newlyPressedKeys.Add((Key)key);
 		}
+
+		protected override bool IsCapsLocked
+		{
+			get { return (((ushort)GetKeyState(0x14)) & 0xffff) != 0; }
+		}
+
+		[DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true,
+			CallingConvention = CallingConvention.Winapi)]
+		private static extern short GetKeyState(int keyCode);
 	}
 }

@@ -23,26 +23,33 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			try
 			{
-				var stream = new MemoryStream();
-				fileData.CopyTo(stream);
-				stream.Position = 0;
-				musicStream = new MusicStreamFactory().Load(stream);
-				source = new SourceVoice((device as XAudioDevice).XAudio2,
-					new WaveFormat
-					{
-						SamplesPerSecond = musicStream.Samplerate,
-						BitsPerSample = 16,
-						Channels = (short)musicStream.Channels,
-						AverageBytesPerSecond = (musicStream.Samplerate / 16) / 8,
-						BlockAlignment = (short)(2 * musicStream.Channels),
-						FormatTag = WaveFormatTag.Pcm
-					});
+				TryLoadData(fileData);
 			}
 			catch (Exception ex)
 			{
 				if (Debugger.IsAttached)
 					throw new CouldNotLoadMusicFromFilestream(Name, ex);
 			}
+		}
+
+		private void TryLoadData(Stream fileData)
+		{
+			if ((device as XAudioDevice).XAudio == null)
+				return;
+			var stream = new MemoryStream();
+			fileData.CopyTo(stream);
+			stream.Position = 0;
+			musicStream = new MusicStreamFactory().Load(stream);
+			source = new SourceVoice((device as XAudioDevice).XAudio,
+				new WaveFormat
+				{
+					SamplesPerSecond = musicStream.Samplerate,
+					BitsPerSample = 16,
+					Channels = (short)musicStream.Channels,
+					AverageBytesPerSecond = (musicStream.Samplerate / 16) / 8,
+					BlockAlignment = (short)(2 * musicStream.Channels),
+					FormatTag = WaveFormatTag.Pcm
+				});
 		}
 
 		private BaseMusicStream musicStream;
@@ -59,6 +66,8 @@ namespace DeltaEngine.Multimedia.SlimDX
 
 		protected override void PlayNativeMusic()
 		{
+			if (musicStream == null || source == null)
+				return;
 			musicStream.Rewind();
 			source.Start();
 			isPlaying = true;
@@ -70,12 +79,13 @@ namespace DeltaEngine.Multimedia.SlimDX
 
 		protected override void SetPlayingVolume(float value)
 		{
-			source.Volume = value;
+			if (source != null)
+				source.Volume = value;
 		}
 
 		public override void Run()
 		{
-			while (source.State.BuffersQueued < NumberOfBuffers)
+			while (source != null && source.State.BuffersQueued < NumberOfBuffers)
 			{
 				PutInStreamIfDataAvailable();
 				if (isAbleToStream)
@@ -88,6 +98,8 @@ namespace DeltaEngine.Multimedia.SlimDX
 		protected override void StopNativeMusic()
 		{
 			isPlaying = false;
+			if (source == null)
+				return;
 			source.Stop();
 			source.FlushSourceBuffers();
 		}
@@ -101,7 +113,7 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			StreamBuffer currentBuffer = buffers[nextBufferIndex];
 			isAbleToStream = currentBuffer.FillFromStream(musicStream);
-			if (!isAbleToStream)
+			if (!isAbleToStream || source == null)
 				return;
 			source.SubmitSourceBuffer(currentBuffer.XAudioBuffer);
 			nextBufferIndex = (nextBufferIndex + 1) % NumberOfBuffers;
@@ -114,10 +126,8 @@ namespace DeltaEngine.Multimedia.SlimDX
 		{
 			if (musicStream == null)
 				return;
-
 			base.DisposeData();
 			musicStream = null;
-
 			if (source != null)
 				DisposeSource();
 		}

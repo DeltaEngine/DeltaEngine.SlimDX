@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using DeltaEngine.Core;
 using DeltaEngine.Datatypes;
 using DeltaEngine.Entities;
 using DeltaEngine.Input.Windows;
@@ -11,9 +12,9 @@ namespace DeltaEngine.Input.SlimDX
 	/// </summary>
 	public class SlimDXMouse : Mouse
 	{
-		public SlimDXMouse(CursorPositionTranslater positionTranslater)
+		public SlimDXMouse(Window window)
 		{
-			this.positionTranslater = positionTranslater;
+			positionTranslater = new CursorPositionTranslater(window);
 			mouseCounter = new MouseDeviceCounter();
 			directInput = new DInput.DirectInput();
 			mouse = new DInput.Mouse(directInput);
@@ -34,20 +35,21 @@ namespace DeltaEngine.Input.SlimDX
 			protected set { }
 		}
 
-		public override void SetPosition(Vector2D position)
+		public override void SetNativePosition(Vector2D position)
 		{
 			positionTranslater.SetCursorPosition(position);
 		}
 
-		public override void Dispose()
+		public override void Update(IEnumerable<Entity> entities)
 		{
-			if (mouse != null)
-				mouse.Unacquire();
-			mouse = null;
-			directInput = null;
+			mouse.GetCurrentState(ref currentState);
+			ScrollWheelValue = currentState.Z / MouseWheelDivider;
+			UpdateMousePosition();
+			UpdateMouseButtons();
+			base.Update(entities);
 		}
 
-		public virtual void Run() {}
+		private const int MouseWheelDivider = 120;
 
 		private void UpdateMousePosition()
 		{
@@ -63,13 +65,12 @@ namespace DeltaEngine.Input.SlimDX
 			X2Button = X2Button.UpdateOnNativePressing(currentState.GetButtons()[4]);
 		}
 
-		public override void Update(IEnumerable<Entity> entities)
+		public override void Dispose()
 		{
-			mouse.GetCurrentState(ref currentState);
-			ScrollWheelValue = currentState.Z;
-			UpdateMousePosition();
-			UpdateMouseButtons();
-			base.Update(entities);
+			if (mouse != null)
+				mouse.Unacquire();
+			mouse = null;
+			directInput = null;
 		}
 	}
 }
